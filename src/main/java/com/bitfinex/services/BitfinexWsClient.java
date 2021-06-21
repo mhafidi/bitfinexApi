@@ -1,4 +1,4 @@
-package com.bitfinex.api.services;
+package com.bitfinex.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import java.net.URI;
 import java.time.ZonedDateTime;
 
+//draft
 public class BitfinexWsClient
 {
     private static final Logger wsExchangeLogger = LoggerFactory.getLogger(BitfinexWsClient.class);

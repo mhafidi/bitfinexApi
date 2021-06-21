@@ -1,4 +1,4 @@
-package com.bitfinex.api.core;
+package com.bitfinex.core;
 
 public class Algorithm
 {

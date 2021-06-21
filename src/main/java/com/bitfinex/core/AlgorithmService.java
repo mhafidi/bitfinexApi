@@ -1,4 +1,4 @@
-package com.bitfinex.api.core;
+package com.bitfinex.core;
 
 import org.springframework.stereotype.Component;
 

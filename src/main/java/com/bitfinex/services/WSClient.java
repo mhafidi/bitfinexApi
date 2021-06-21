@@ -1,4 +1,4 @@
-package com.bitfinex.api.services;
+package com.bitfinex.services;
 
 
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;

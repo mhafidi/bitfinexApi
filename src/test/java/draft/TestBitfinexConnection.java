@@ -1,4 +1,6 @@
-import com.bitfinex.api.services.BitfinexWsClient;
+package draft;
+
+import com.bitfinex.services.BitfinexWsClient;
 import org.junit.Test;
 
 public class TestBitfinexConnection
