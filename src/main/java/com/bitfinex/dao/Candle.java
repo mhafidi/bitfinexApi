@@ -1,5 +1,8 @@
 package com.bitfinex.dao;
 
+import org.json.JSONArray;
+import org.json.JSONTokener;
+
 public class Candle
 {
     private long timestamp;
@@ -8,6 +11,21 @@ public class Candle
     private double high;
     private double low;
     private double volume;
+
+
+    public Candle(String payload) throws DAOException {
+        JSONArray jsonArray = new JSONArray(new JSONTokener(payload));
+        if(jsonArray.length()!=6)
+            throw new DAOException("unable to decode payload");
+        timestamp =jsonArray.getInt(0);
+        open = Double.parseDouble(jsonArray.get(1).toString());
+        close = Double.parseDouble(jsonArray.get(2).toString());
+        high = Double.parseDouble(jsonArray.get(3).toString());
+        low = Double.parseDouble(jsonArray.get(4).toString());
+        volume = Double.parseDouble(jsonArray.get(5).toString());
+
+
+    }
 
     public long getTimestamp() {
         return timestamp;

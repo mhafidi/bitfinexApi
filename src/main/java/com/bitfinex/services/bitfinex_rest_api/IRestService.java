@@ -7,5 +7,5 @@ import java.util.List;
 public interface IRestService
 {
     List<Candle> getCandles(String candleInterval,String symbol);
-    Candle getCandle(String candleInterval,String symbol);
+    String getCandle(String candleInterval,String symbol);
 }
