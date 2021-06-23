@@ -11,12 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/main-control")
 public class MainController
 {
-    private final MainControllerService mainControllerService;
     @Autowired
+    MainControllerService mainControllerService;
 
-    public MainController(MainControllerService mainControllerService) {
-        this.mainControllerService = mainControllerService;
-    }
     @GetMapping("/startBot")
     public int startBot()
     {
