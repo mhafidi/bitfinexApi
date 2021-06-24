@@ -14,7 +14,7 @@ public interface BitfinexClient {
 
 
     @RequestMapping(path = "candles/trade:{candleInterval}:{symbol}/hist/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    List<Candle> getCandles(@PathVariable("candleInterval") String candleInterval, @PathVariable("candleInterval") String symbol);
+    String getCandles(@PathVariable("candleInterval") String candleInterval, @PathVariable("symbol") String symbol);
 
     @RequestMapping(path = "candles/trade:{candleInterval}:{symbol}/last/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     String getCandle(@PathVariable("candleInterval") String candleInterval, @PathVariable("symbol") String symbol);

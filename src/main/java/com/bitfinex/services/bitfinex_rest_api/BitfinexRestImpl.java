@@ -18,7 +18,7 @@ public class BitfinexRestImpl implements IRestService {
     }
 
     @Override
-    public List<Candle> getCandles(String candleInterval, String symbol) {
+    public String getCandles(String candleInterval, String symbol) {
         return bitfinexClient.getCandles(candleInterval,symbol);
     }
 
