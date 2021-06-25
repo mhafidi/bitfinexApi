@@ -1,19 +1,24 @@
 package com.bitfinex.core;
 
-import com.bitfinex.dao.Candle;
-import com.bitfinex.dao.Candles;
 import com.bitfinex.dao.DAOException;
-import com.bitfinex.services.bitfinex_rest_api.CandleInterval;
 import com.bitfinex.services.bitfinex_rest_api.IRestService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-@Component
-public class MainControllerService {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-    private static final Logger readerLogger = LoggerFactory.getLogger(MainControllerService.class);
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+@Component
+public class MainControllerService
+{
+
+    private static final Logger logger = LoggerFactory.getLogger(MainControllerService.class);
     private final IRestService iRestService;
+    private final int CORE_POOL_SIZE=Integer.MAX_VALUE;
+    ExecutorService mainThreadService = Executors.newFixedThreadPool(CORE_POOL_SIZE);
+    StrategyHandler strategyHandler;
 
 
     @Autowired
@@ -22,16 +27,26 @@ public class MainControllerService {
     }
 
 
-    public String startStrategy(String algoType,String symbol) throws DAOException
+    public String startStrategy(String strategyType,String symbol) throws DAOException
     {
+        if(logger.isDebugEnabled())
+        {
+            logger.debug("StrategyType ["+strategyType+"] Symbol ["+symbol+"]");
+        }
 
-        String payload=iRestService.getCandle(CandleInterval.MINUTE_1.toString(),symbol);
-        String payload2=iRestService.getCandles(CandleInterval.MINUTE_1.toString(),symbol);
-        System.out.println(payload2);
-        Candle candle = new Candle(payload);
-        Candles candles = new Candles(payload2);
-        System.out.println(candles.getCandles().size());
+        if(strategyHandler!=null)
+        {
+            return "Trading BOT is already started";
+        }
+        strategyHandler = new StrategyHandler(iRestService, StrategyType.valueOf(strategyType),symbol);
+        mainThreadService.submit(strategyHandler);
+        return "started";
+    }
 
-        return candle.toString();
+    public String stopStrategy()
+    {
+        strategyHandler.stop();
+        strategyHandler=null;
+        return "stopped";
     }
 }

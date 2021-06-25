@@ -18,11 +18,16 @@ public class MainController
     @Autowired
     MainControllerService mainControllerService;
 
-    @GetMapping("/startBot/symbols/{symbol}/algos/{algoType}")
-    public String startBot(@PathVariable(value="symbol")String symbol,@PathVariable(value="algoType") String algoType) throws DAOException
+    @GetMapping("/startBot/symbols/{symbol}/algos/{strategyType}")
+    public String startBot(@PathVariable(value="symbol")String symbol,@PathVariable(value="strategyType") String strategyType) throws DAOException
     {
-        mainControllerLogger.info("algoType="+algoType+" symbol="+symbol);
-        return mainControllerService.startStrategy(algoType,symbol);
+        mainControllerLogger.info("strategyType="+strategyType+" symbol="+symbol);
+        return mainControllerService.startStrategy(strategyType,symbol);
     }
+    @GetMapping("/stopBot")
+    public String stopBot()
+    {
 
+        return mainControllerService.stopStrategy();
+    }
 }
