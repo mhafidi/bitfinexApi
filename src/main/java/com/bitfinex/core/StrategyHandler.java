@@ -2,6 +2,7 @@ package com.bitfinex.core;
 
 import com.bitfinex.core.strategies.StrategyAlgorithm;
 import com.bitfinex.core.strategies.MovingAverageStrategy;
+import com.bitfinex.services.bitfinex_rest_api.CandleInterval;
 import com.bitfinex.services.bitfinex_rest_api.IRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,11 +19,19 @@ public class StrategyHandler implements Runnable
     String symbol;
     private final int CORE_POOL_SIZE=Integer.MAX_VALUE;
     ExecutorService mainThreadService = Executors.newFixedThreadPool(CORE_POOL_SIZE);
+    CandleInterval strategyInterval;
     public StrategyHandler(IRestService iRestService, StrategyType strategyType, String symbol)
     {
         this.iRestService = iRestService;
         this.strategyType = strategyType;
         this.symbol = symbol;
+    }
+
+    public StrategyHandler(IRestService iRestService, StrategyType strategyType, String symbol, CandleInterval strategyInterval) {
+        this.iRestService = iRestService;
+        this.strategyType = strategyType;
+        this.symbol = symbol;
+        this.strategyInterval = strategyInterval;
     }
 
     @Override
@@ -33,7 +42,7 @@ public class StrategyHandler implements Runnable
         {
             case moving_avg:
                 logger.info("Starting Moving average strategy");
-                strategyAlgorithm = new MovingAverageStrategy(iRestService,symbol);
+                strategyAlgorithm = new MovingAverageStrategy(iRestService,symbol,strategyInterval);
                 mainThreadService.submit(strategyAlgorithm);
                 break;
             case ADX_contraction:

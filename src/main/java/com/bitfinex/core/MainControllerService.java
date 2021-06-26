@@ -1,6 +1,7 @@
 package com.bitfinex.core;
 
 import com.bitfinex.dao.DAOException;
+import com.bitfinex.services.bitfinex_rest_api.CandleInterval;
 import com.bitfinex.services.bitfinex_rest_api.IRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ public class MainControllerService
     }
 
 
-    public String startStrategy(String strategyType,String symbol) throws DAOException
+    public String startStrategy(String strategyType, String symbol, CandleInterval strategyInterval) throws DAOException
     {
         if(logger.isDebugEnabled())
         {
@@ -38,7 +39,7 @@ public class MainControllerService
         {
             return "Trading BOT is already started";
         }
-        strategyHandler = new StrategyHandler(iRestService, StrategyType.valueOf(strategyType),symbol);
+        strategyHandler = new StrategyHandler(iRestService, StrategyType.valueOf(strategyType),symbol,strategyInterval);
         mainThreadService.submit(strategyHandler);
         return "started";
     }

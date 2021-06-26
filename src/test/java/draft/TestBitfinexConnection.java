@@ -3,6 +3,8 @@ package draft;
 import com.bitfinex.services.BitfinexWsClient;
 import org.junit.Test;
 
+import java.util.Stack;
+
 public class TestBitfinexConnection
 {
 
