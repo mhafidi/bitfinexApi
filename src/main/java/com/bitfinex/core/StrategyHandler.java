@@ -61,4 +61,12 @@ public class StrategyHandler implements Runnable
         if(strategyAlgorithm !=null)
             strategyAlgorithm.stop();
     }
+    public double getAccountBalance()
+    {
+        if(strategyAlgorithm!=null)
+        {
+            return strategyAlgorithm.getAccountBalanceValue();
+        }
+        return 0.0;
+    }
 }

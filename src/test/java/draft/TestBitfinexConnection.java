@@ -14,4 +14,14 @@ public class TestBitfinexConnection
         BitfinexWsClient bitfinexWsClient = new BitfinexWsClient();
 
     }
+
+    @Test
+    public void draftTest()
+    {
+        double value=0.0;
+        double gama=1.1,zeta=1.1;
+
+        if((gama-zeta)==0.0)
+            System.out.println("toto");
+    }
 }

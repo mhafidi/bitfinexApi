@@ -31,4 +31,11 @@ public class MainController
 
         return mainControllerService.stopStrategy();
     }
+    @GetMapping("/getaccountbalance")
+    public double getAccountBalance()
+    {
+
+        return mainControllerService.getAccountBalanceValue();
+    }
+
 }

@@ -50,4 +50,8 @@ public class MainControllerService
         strategyHandler=null;
         return "stopped";
     }
+    public double getAccountBalanceValue()
+    {
+        return strategyHandler.getAccountBalance();
+    }
 }

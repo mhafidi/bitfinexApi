@@ -31,6 +31,15 @@ public class MovingAverageStrategy implements StrategyAlgorithm
     MAMarketTrend maMarketTrend=MAMarketTrend.unset;
     boolean marketTrendChange =false;
     private boolean smaCrossConfiguration;
+    double current_diff_long_entry_position=0.0,previous_diff_long_entry_position=0.0;
+    private boolean managePositionPhase=false;
+
+    private double accountBalanceValue =1000.0; // starting with 1000$
+    final double FEES_RATE=0.02/100;
+    private double openPositionPrice;
+    private double amountPosition=0.05;
+    private boolean longPosition;
+    private boolean shortPosition=false;
 
     public MovingAverageStrategy(IRestService iRestService, String symbol, CandleInterval strategyInterval)
     {
@@ -74,29 +83,166 @@ public class MovingAverageStrategy implements StrategyAlgorithm
     {
         try
         {
-
+            Candle lastCandle;
             updateCandleStack();
             updateSMAs();
-            if(smaCrossConfiguration)
+            lastCandle = candlesStack.get(0);
+            marketTrendChange=marketTrendUpdate();
+            if(managePositionPhase)
             {
-
+                managePosition(lastCandle);
                 return;
             }
-            marketTrendChange=marketTrendUpdate();
+            if(smaCrossConfiguration)
+            {
+                smaConfigurationCrossPhase(lastCandle);
+                return;
+            }
             if(marketTrendChange)
             {
                 logger.info("Market Trend change");
+                smaCrossConfiguration = true;
 
             }
-
-
-
 
         }
         catch (DAOException e)
         {
             logger.error(e.toString());
         }
+    }
+
+    private void managePosition(Candle lastCandle) {
+        double positionPlusFees;
+        double positionValue;
+        if(longPosition)
+        {
+            if(maMarketTrend==MAMarketTrend.downtrend)
+            {
+                //TODO the sell value will be the highest bid in the orderbook
+                logger.warn("Close Long position, Cause: [trend changed] current price ["+ lastCandle.getLow()+"]");
+                positionValue = lastCandle.getLow()*amountPosition;
+                positionPlusFees = positionValue - positionValue*FEES_RATE;
+                accountBalanceValue = accountBalanceValue +positionPlusFees;
+                managePositionPhase = false;
+                longPosition = false;
+                return ;
+            }
+            if(lastCandle.getClose()>=sma30)
+            {
+                //Time to take profit and return to wait to a good market opportunity
+                logger.info("Timing Take Profit");
+                if(current_diff_long_entry_position==0.0)
+                {
+                    current_diff_long_entry_position = sma30 -sma120;
+                    logger.info("Skip calculating previous SMA diff");
+                    return ;
+                }
+                else
+                {
+                    previous_diff_long_entry_position = current_diff_long_entry_position;
+                    current_diff_long_entry_position = sma30 -sma120;
+                    if(current_diff_long_entry_position<previous_diff_long_entry_position)
+                    {
+                        if(lastCandle.getClose()<sma30)
+                        {
+                            logger.warn("Close Long position, Cause: [T-P: configuration] current price ["+ lastCandle.getLow()+"]");
+                            positionValue = lastCandle.getLow()*amountPosition;
+                            positionPlusFees = positionValue - positionValue*FEES_RATE;
+                            accountBalanceValue = accountBalanceValue +positionPlusFees;
+                            managePositionPhase = false;
+                            longPosition = false;
+                            return ;
+                        }
+                    }
+                    return ;
+                }
+
+
+            }
+            if(lastCandle.getClose()<sma120)
+            {
+                double lossRate= (openPositionPrice- lastCandle.getClose())/openPositionPrice;
+                logger.info("check stop loss");
+                if(lossRate>=0.01)
+                {
+                    positionValue = lastCandle.getLow()*amountPosition;
+                    positionPlusFees = positionValue - positionValue*FEES_RATE;
+                    accountBalanceValue = accountBalanceValue +positionPlusFees;
+                    managePositionPhase = false;
+                    longPosition = false;
+                    logger.warn("Close Long position, Cause: [Stop loss was hit]");
+                }
+                return ;
+            }
+
+        }
+        if(shortPosition)
+        {
+            return ;
+        }
+        return ;
+    }
+
+    private void smaConfigurationCrossPhase(Candle lastCandle)
+    {
+        double positionValue;
+        double positionPlusFees;
+        if(maMarketTrend==MAMarketTrend.uptrend)
+        {
+
+            if(lastCandle.getClose()>= sma30)
+            {
+                logger.info("Timing entry long position");
+                if(current_diff_long_entry_position==0.0)
+                {
+                    current_diff_long_entry_position = lastCandle.getClose() - sma120;
+                    logger.info("Skip updating previous diff ");
+                }
+                else
+                {
+
+                    previous_diff_long_entry_position = current_diff_long_entry_position;
+                    current_diff_long_entry_position = lastCandle.getClose() - sma120;
+                    if(current_diff_long_entry_position>previous_diff_long_entry_position)
+                    {
+
+                        positionValue = candlesStack.get(0).getHigh() * 0.05;
+                        positionPlusFees=positionValue+positionValue*FEES_RATE;
+                        if(positionPlusFees>= accountBalanceValue)
+                        {
+                            logger.error("Insufficient balance, your current Balance is ["+accountBalanceValue+"]");
+                            smaCrossConfiguration=false;
+                            return;
+                        }
+
+                        else
+                        {
+                            managePositionPhase=true;
+                            longPosition =true;
+                            logger.info("Enter position - Market Position at the price [" + candlesStack.get(0).getHigh() + "] with the value of" +
+                                    " [" + positionValue + "]");
+                            openPositionPrice =  candlesStack.get(0).getHigh();
+                            accountBalanceValue=accountBalanceValue-positionPlusFees;
+                            previous_diff_long_entry_position=0.0;current_diff_long_entry_position=0.0;
+                            smaCrossConfiguration=false;
+                            return;
+                        }
+
+                    }
+                }
+
+
+
+            }
+
+        }
+        if(maMarketTrend==MAMarketTrend.downtrend)
+        {
+            smaCrossConfiguration = false;//TODO second part of the algorithm for short positions
+            return;
+        }
+        return;
     }
 
     private void updateCandleStack() throws DAOException {
@@ -159,5 +305,10 @@ public class MovingAverageStrategy implements StrategyAlgorithm
             logger.warn("Other conditions will be added to avoid stopping the strategy with opened positions");
             executor.shutdown();
         }
+    }
+
+    public double getAccountBalanceValue()
+    {
+        return accountBalanceValue;
     }
 }
