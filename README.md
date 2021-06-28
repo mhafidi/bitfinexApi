@@ -29,7 +29,7 @@ http://localhost:8080/main-control/getaccountbalance
 
 - Rest Interface to start/stop the trading bot  with the choice of a valid trading strategy plus a valid trading currency pair 
 
-**Example:** using her the moving_avg strategy plus the ETH/USD pair
+**Example:** using here the moving_avg strategy plus the ETH/USD pair
 ```
 http://localhost:8080/main-control/startBot/symbols/tETHUSD/algos/moving_avg
 ```
