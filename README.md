@@ -35,7 +35,7 @@ http://localhost:8080/main-control/startBot/symbols/tETHUSD/algos/moving_avg
 ```
 
 - Moving average strategy implemented in the class ***MovingAverageStrategy***:  (NOTE: this strategy does not take real positions yet!!! but it computes the real P&L according to realtime market figures)
-        it is a kind of state machine that takes decision to in timing to enter a long/short position depending on two moving averages + pull backs: the snapshot bellow summaries an entry postion and a sell that was performed by this algorithm:
+        it is a kind of state machine that takes decision in timing to enter a long/short position depending on two moving averages + pull backs: the snapshot bellow summaries an entry postion and a sell that was performed by this algorithm:
      ![Moving average strategy](moving-average-strategy.png)
 
 ### Tests 
