@@ -1,4 +1,4 @@
-package com.bitfinex.core.strategies;
+package com.bitfinex.core.strategies.sma;
 
 public enum MAMarketTrend
 {

@@ -1,7 +1,7 @@
 package com.bitfinex.core;
 
 import com.bitfinex.core.strategies.StrategyAlgorithm;
-import com.bitfinex.core.strategies.MovingAverageStrategy;
+import com.bitfinex.core.strategies.sma.MovingAverageStrategy;
 import com.bitfinex.services.bitfinex_rest_api.CandleInterval;
 import com.bitfinex.services.bitfinex_rest_api.IRestService;
 import org.slf4j.Logger;

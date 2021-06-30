@@ -1,5 +1,6 @@
-package com.bitfinex.core.strategies;
+package com.bitfinex.core.strategies.sma;
 
+import com.bitfinex.core.strategies.StrategyAlgorithm;
 import com.bitfinex.core.utils.SizedStack;
 import com.bitfinex.dao.Candle;
 import com.bitfinex.dao.Candles;
