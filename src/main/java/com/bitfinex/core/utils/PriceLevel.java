@@ -1,4 +1,4 @@
-package com.bitfinex.core.utils.geometry;
+package com.bitfinex.core.utils;
 
 public enum PriceLevel
 {
