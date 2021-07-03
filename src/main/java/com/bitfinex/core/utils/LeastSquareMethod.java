@@ -20,15 +20,20 @@ import java.util.Map;
 * */
 public class LeastSquareMethod
 {
-    double a;
-    double b;
+    double a=0.0;
+    double b=0.0;
     private static final Logger logger = LoggerFactory.getLogger(LeastSquareMethod.class);
     Map<Double,Double> timePrice;
 
 
     public LeastSquareMethod(Map<Double, Double> timePrice)
     {
+
         this.timePrice = timePrice;
+        if(timePrice!=null && !timePrice.isEmpty())
+        {
+            calculateParameters();
+        }
     }
 
     public double getA() {
@@ -67,6 +72,11 @@ public class LeastSquareMethod
             logger.debug(this.toString());
     }
 
+    public double diffPointWithLine(long time,double price)
+    {
+        double estimate=a*time+b;
+        return (price-estimate);
+    }
     @Override
     public String toString() {
         return "LeastSquareMethod{"+a+"X"+b+'}';
