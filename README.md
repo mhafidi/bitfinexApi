@@ -38,6 +38,8 @@ http://localhost:8080/main-control/startBot/symbols/tETHUSD/algos/moving_avg
         it is a kind of state machine that takes decision in timing to enter a long/short position depending on two moving averages + pull backs: the snapshot bellow summaries an entry postion and a sell that was performed by this algorithm:
      ![Moving average strategy](moving-average-strategy.png)
 
+
+-Level Price Strategy 
 ### Tests 
 
 - Tested moving average strategy in two days +2% where 12 positions where openned 5 neutral 3 losses 4 gains ( starting capital test 1000$ P&L:+20$ , position size ~ 95$ , SL: -0.95$)

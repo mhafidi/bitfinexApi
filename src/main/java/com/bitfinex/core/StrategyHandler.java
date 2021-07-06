@@ -1,6 +1,7 @@
 package com.bitfinex.core;
 
 import com.bitfinex.core.strategies.StrategyAlgorithm;
+import com.bitfinex.core.strategies.levels.LevelPriceStrategy;
 import com.bitfinex.core.strategies.sma.MovingAverageStrategy;
 import com.bitfinex.services.bitfinex_rest_api.CandleInterval;
 import com.bitfinex.services.bitfinex_rest_api.IRestService;
@@ -44,6 +45,10 @@ public class StrategyHandler implements Runnable
                 logger.info("Starting Moving average strategy");
                 strategyAlgorithm = new MovingAverageStrategy(iRestService,symbol,strategyInterval);
                 mainThreadService.submit(strategyAlgorithm);
+                break;
+            case level_price:
+                logger.info("starting Level price strategy");
+                strategyAlgorithm = new LevelPriceStrategy(iRestService,symbol,strategyInterval);
                 break;
             case ADX_contraction:
                 logger.warn("["+StrategyType.ADX_contraction+"] is not supported");
