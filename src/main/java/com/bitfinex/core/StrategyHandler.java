@@ -21,12 +21,6 @@ public class StrategyHandler implements Runnable
     private final int CORE_POOL_SIZE=Integer.MAX_VALUE;
     ExecutorService mainThreadService = Executors.newFixedThreadPool(CORE_POOL_SIZE);
     CandleInterval strategyInterval;
-    public StrategyHandler(IRestService iRestService, StrategyType strategyType, String symbol)
-    {
-        this.iRestService = iRestService;
-        this.strategyType = strategyType;
-        this.symbol = symbol;
-    }
 
     public StrategyHandler(IRestService iRestService, StrategyType strategyType, String symbol, CandleInterval strategyInterval) {
         this.iRestService = iRestService;

@@ -1,5 +1,6 @@
 package com.bitfinex.core.strategies.sma;
 
+import com.bitfinex.core.strategies.ABsStrategyAlgorithm;
 import com.bitfinex.core.strategies.StrategyAlgorithm;
 import com.bitfinex.core.utils.SizedStack;
 import com.bitfinex.dao.Candle;
@@ -16,18 +17,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
-public class MovingAverageStrategy implements StrategyAlgorithm
+public class MovingAverageStrategy extends ABsStrategyAlgorithm
 {
     private static final Logger logger = LoggerFactory.getLogger(MovingAverageStrategy.class);
-    IRestService iRestService;
-    String symbol;
-    ScheduledExecutorService executor;
-    long delay  = 0L;
-    long second = 1000L;
-    long minute = second*60;
-    long hour = minute*60;
-    CandleInterval strategyInterval;
-    SizedStack<Candle> candlesStack = new SizedStack<>(120); // TODO think of modifying the size tunable
+
+
+
     double sma30 =0.0, sma120 =0.0; //state machine
     MAMarketTrend maMarketTrend=MAMarketTrend.unset;
     boolean marketTrendChange =false;
@@ -44,9 +39,8 @@ public class MovingAverageStrategy implements StrategyAlgorithm
 
     public MovingAverageStrategy(IRestService iRestService, String symbol, CandleInterval strategyInterval)
     {
-        this.iRestService = iRestService;
-        this.symbol = symbol;
-        this.strategyInterval =strategyInterval;
+        super(iRestService,symbol,strategyInterval);
+
     }
 
     @Override
@@ -79,6 +73,7 @@ public class MovingAverageStrategy implements StrategyAlgorithm
         }
         return second;
     }
+
 
     private void processStrategy()
     {
