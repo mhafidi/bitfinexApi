@@ -2,6 +2,7 @@ package com.bitfinex.core.strategies;
 
 import com.bitfinex.core.utils.SizedStack;
 import com.bitfinex.dao.Candle;
+import com.bitfinex.dao.DAOException;
 import com.bitfinex.services.bitfinex_rest_api.CandleInterval;
 import com.bitfinex.services.bitfinex_rest_api.IRestService;
 
@@ -25,5 +26,10 @@ public abstract class ABsStrategyAlgorithm implements StrategyAlgorithm
         this.iRestService = iRestService;
         this.strategyInterval = strategyInterval;
         this.symbol = symbol;
+    }
+    protected void updateCandleStack() throws DAOException {
+        String payload=iRestService.getCandle(strategyInterval.toString(),symbol);
+        Candle candle = new Candle(payload);
+        candlesStack.push(candle);
     }
 }

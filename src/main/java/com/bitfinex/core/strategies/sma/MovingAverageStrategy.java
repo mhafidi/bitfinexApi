@@ -241,11 +241,7 @@ public class MovingAverageStrategy extends ABsStrategyAlgorithm
         return;
     }
 
-    private void updateCandleStack() throws DAOException {
-        String payload=iRestService.getCandle(strategyInterval.toString(),symbol);
-        Candle candle = new Candle(payload);
-        candlesStack.push(candle);
-    }
+
 
     private void initialization()
     {
