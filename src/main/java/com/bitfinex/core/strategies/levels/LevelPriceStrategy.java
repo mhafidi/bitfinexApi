@@ -6,6 +6,8 @@ import com.bitfinex.services.bitfinex_rest_api.IRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+//level price strategy + price contraction (volumes)
+//
 public class LevelPriceStrategy extends ABsStrategyAlgorithm
 {
     private static final Logger logger = LoggerFactory.getLogger(LevelPriceStrategy.class);

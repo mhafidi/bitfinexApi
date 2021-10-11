@@ -23,7 +23,6 @@ public class MovingAverageStrategy extends ABsStrategyAlgorithm
 
 
 
-    double sma30 =0.0, sma120 =0.0; //state machine
     MAMarketTrend maMarketTrend=MAMarketTrend.unset;
     boolean marketTrendChange =false;
     private boolean smaCrossConfiguration;
@@ -177,7 +176,6 @@ public class MovingAverageStrategy extends ABsStrategyAlgorithm
         {
             return ;
         }
-        return ;
     }
 
     private void smaConfigurationCrossPhase(Candle lastCandle)
@@ -238,7 +236,6 @@ public class MovingAverageStrategy extends ABsStrategyAlgorithm
             smaCrossConfiguration = false;//TODO second part of the algorithm for short positions
             return;
         }
-        return;
     }
 
 
@@ -279,13 +276,6 @@ public class MovingAverageStrategy extends ABsStrategyAlgorithm
             maMarketTrend = MAMarketTrend.uptrend;
         }
         return marketTrendChanged;
-    }
-
-    private void updateSMAs()
-    {
-        sma120 = candlesStack.stream().mapToDouble(Candle::getClose).sum()/120;
-        sma30 = IntStream.range(0,30).mapToDouble(i->candlesStack.get(i).getClose()).sum()/30;
-        logger.info("current sma30["+ sma30 +"]  current sma120["+ sma120 +"]" );
     }
 
 
